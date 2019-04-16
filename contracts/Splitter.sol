@@ -3,8 +3,8 @@ pragma solidity 0.5.7;
 import "./Suspendable.sol";
 
 contract Splitter is Suspendable {
-    address private firstFriend;
-    address private secondFriend;
+    address payable private firstFriend;
+    address payable private secondFriend;
 
     event LogFriendAdded(address who);
     event LogSplit(address first, address second, uint howmuch);
@@ -14,12 +14,12 @@ contract Splitter is Suspendable {
         _;
     }
 
-    function setFirstFriend(address who) public isOwner ifRunning {
+    function setFirstFriend(address payable who) public isOwner ifRunning {
         firstFriend = who;
         emit LogFriendAdded(who);
     }
 
-    function setSecondFriend(address who) public isOwner ifRunning {
+    function setSecondFriend(address payable who) public isOwner ifRunning {
         secondFriend = who;
         emit LogFriendAdded(who);
     }
@@ -33,7 +33,7 @@ contract Splitter is Suspendable {
         balance = address(this).balance;
     }
 
-    function split(uint amount) public payable areFriendsThere isOwner ifRunning returns (bool status) {
+    function split() public payable areFriendsThere isOwner ifRunning returns (bool status) {
         uint splitAmount = getBalance() / 2;
         firstFriend.transfer(splitAmount);
         secondFriend.transfer(splitAmount);
