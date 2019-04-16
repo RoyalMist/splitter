@@ -1,7 +1,7 @@
-pragma solidity 0.5.6;
+pragma solidity 0.5.7;
 
-import "./Ownable.sol";
+import "./Suspendable.sol";
 
-contract Splitter is Ownable {
+contract Splitter is Suspendable {
 
 }

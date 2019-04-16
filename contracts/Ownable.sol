@@ -1,4 +1,4 @@
-pragma solidity 0.5.6;
+pragma solidity 0.5.7;
 
 contract Ownable {
     address public owner;
@@ -15,7 +15,7 @@ contract Ownable {
     }
 
     function changeOwnership(address newOwner) public isOwner returns (bool success) {
-        LogOwnerChanged(owner, newOwner);
+        emit LogOwnerChanged(owner, newOwner);
         owner = newOwner;
         success = true;
     }
