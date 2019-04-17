@@ -37,8 +37,9 @@ contract Splitter is Suspendable {
 
         // If bonus can be divided by 2 without remainder we can then add this bonus to each friend's wealth.
         if (bonus % 2 == 0) {
-            balances[firstFriend] += 1;
-            balances[secondFriend] += 1;
+            uint split_bonus = bonus / 2;
+            balances[firstFriend] += split_bonus;
+            balances[secondFriend] += split_bonus;
         }
 
         emit LogLoad(msg.sender, msg.value, bonus);
