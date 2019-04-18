@@ -9,9 +9,6 @@ contract Splitter is Suspendable {
     // Map of address and related wealth.
     mapping(address => uint) private balances;
 
-    // To deal with division remainder, contract owner will keep it for him as a gift from users :).
-    uint private bonus;
-
     event LogLoad(address initiator, uint howMuch, uint bonus);
     event LogWithdraw(address who, uint howMuch);
     event LogWithdrawBonus(address who, uint howMuch);
@@ -23,10 +20,10 @@ contract Splitter is Suspendable {
         require(msg.value > 0, "Please load contract with sufficient funds");
         require(firstRecipient != address(0x0) && secondRecipient != address(0x0), "Please provide valid addresses");
         (uint divided, uint remainder) = msg.value.divide();
-        bonus += remainder;
+        balances[getOwner()] += balances[getOwner()].add(remainder);
         balances[firstRecipient] = balances[firstRecipient].add(divided);
         balances[secondRecipient] = balances[secondRecipient].add(divided);
-        emit LogLoad(msg.sender, msg.value, bonus);
+        emit LogLoad(msg.sender, msg.value, remainder);
     }
 
     function consultMyBalance() public view ifRunning returns (uint balance) {
@@ -40,18 +37,5 @@ contract Splitter is Suspendable {
         emit LogWithdraw(msg.sender, available);
         address(msg.sender).transfer(available);
         balances[msg.sender] = 0;
-    }
-
-    // That's owner bonus.
-    function withdrawBonus() isOwner ifRunning public {
-        require(bonus > 0, "Nothing to withdraw here");
-        emit LogWithdrawBonus(getOwner(), bonus);
-        address(msg.sender).transfer(bonus);
-        bonus = 0;
-    }
-
-    function changeOwnership(address newOwner) public isOwner {
-        require(bonus == 0, "Please withdraw your bonus before");
-        super.changeOwnership(newOwner);
     }
 }
