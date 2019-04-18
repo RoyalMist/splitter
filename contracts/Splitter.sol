@@ -37,8 +37,8 @@ contract Splitter is Suspendable {
     function withdraw() public ifRunning {
         uint available = balances[msg.sender];
         require(available > 0, "Nothing to withdraw here");
-        address(msg.sender).transfer(available);
         emit LogWithdraw(msg.sender, available);
+        address(msg.sender).transfer(available);
     }
 
     // That's owner bonus.
