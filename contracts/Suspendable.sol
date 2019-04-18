@@ -18,8 +18,8 @@ contract Suspendable is Ownable {
         _;
     }
 
-    constructor() public {
-        isRunning = true;
+    constructor(bool running) public {
+        isRunning = running;
     }
 
     function suspend() public isOwner ifRunning {

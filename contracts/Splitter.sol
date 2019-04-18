@@ -16,6 +16,8 @@ contract Splitter is Suspendable {
     event LogWithdraw(address who, uint howMuch);
     event LogWithdrawBonus(address who, uint howMuch);
 
+    constructor() Suspendable(true) public {}
+
     // Loading the contract.
     function splitFunds(address firstRecipient, address secondRecipient) public payable ifRunning {
         require(msg.value > 0, "Please load contract with sufficient funds");
