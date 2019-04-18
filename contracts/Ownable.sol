@@ -1,7 +1,7 @@
 pragma solidity 0.5.7;
 
 contract Ownable {
-    address public owner;
+    address private owner;
 
     event LogOwnerChanged(address previous, address current);
 
@@ -14,9 +14,12 @@ contract Ownable {
         owner = msg.sender;
     }
 
-    function changeOwnership(address newOwner) public isOwner returns (bool success) {
+    function getOwner() internal view returns (address who){
+        who = owner;
+    }
+
+    function changeOwnership(address newOwner) public isOwner {
         emit LogOwnerChanged(owner, newOwner);
         owner = newOwner;
-        success = true;
     }
 }
