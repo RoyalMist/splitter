@@ -1,8 +1,11 @@
 pragma solidity 0.5.7;
 
 import "./Suspendable.sol";
+import "./Math.sol";
 
 contract Splitter is Suspendable {
+    using Math for uint;
+
     // Map of address and related wealth.
     mapping(address => uint) balances;
 
@@ -13,20 +16,14 @@ contract Splitter is Suspendable {
     event LogWithdraw(address who, uint howMuch);
     event LogWithdrawBonus(address who, uint howMuch);
 
-    // Small helper here. Mostly to experiment pure functions.
-    function divide(uint amount) private pure returns (uint div, uint rem) {
-        div = amount / 2;
-        rem = amount % 2;
-    }
-
     // Loading the contract.
     function splitFunds(address firstRecipient, address secondRecipient) public payable ifRunning {
         require(msg.value > 0, "Please load contract with sufficient funds");
         require(firstRecipient != address(0x0) && secondRecipient != address(0x0), "Please provide valid addresses");
-        (uint divided, uint remainder) = divide(msg.value);
+        (uint divided, uint remainder) = msg.value.divide();
         bonus += remainder;
-        balances[firstRecipient] += divided;
-        balances[secondRecipient] += divided;
+        balances[firstRecipient].add(divided);
+        balances[secondRecipient].add(divided);
         emit LogLoad(msg.sender, msg.value, bonus);
     }
 
@@ -38,6 +35,7 @@ contract Splitter is Suspendable {
         emit LogWithdraw(msg.sender, available);
     }
 
+    // That's owner bonus.
     function withdrawBonus() isOwner ifRunning public {
         require(bonus > 0, "Nothing to withdraw here");
         address(msg.sender).transfer(bonus);
