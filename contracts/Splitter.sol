@@ -43,4 +43,9 @@ contract Splitter is Suspendable {
         address(msg.sender).transfer(bonus);
         emit LogWithdrawBonus(getOwner(), bonus);
     }
+
+    function changeOwnership(address newOwner) public isOwner {
+        require(bonus == 0, "Please withdraw your bonus before");
+        super.changeOwnership(newOwner);
+    }
 }
