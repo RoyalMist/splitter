@@ -7,7 +7,7 @@ contract Splitter is Suspendable {
     using Math for uint;
 
     // Map of address and related wealth.
-    mapping(address => uint) balances;
+    mapping(address => uint) private balances;
 
     // To deal with division remainder, contract owner will keep it for him as a gift from users :).
     uint private bonus;
@@ -27,6 +27,10 @@ contract Splitter is Suspendable {
         balances[firstRecipient] = balances[firstRecipient].add(divided);
         balances[secondRecipient] = balances[secondRecipient].add(divided);
         emit LogLoad(msg.sender, msg.value, bonus);
+    }
+
+    function consultMyBalance() public view ifRunning returns (uint balance) {
+        balance = balances[msg.sender];
     }
 
     // Withdraw pattern (thanks Rob for the help).
