@@ -39,13 +39,15 @@ contract Splitter is Suspendable {
         require(available > 0, "Nothing to withdraw here");
         emit LogWithdraw(msg.sender, available);
         address(msg.sender).transfer(available);
+        balances[msg.sender] = 0;
     }
 
     // That's owner bonus.
     function withdrawBonus() isOwner ifRunning public {
         require(bonus > 0, "Nothing to withdraw here");
-        address(msg.sender).transfer(bonus);
         emit LogWithdrawBonus(getOwner(), bonus);
+        address(msg.sender).transfer(bonus);
+        bonus = 0;
     }
 
     function changeOwnership(address newOwner) public isOwner {
