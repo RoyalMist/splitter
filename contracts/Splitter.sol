@@ -22,8 +22,8 @@ contract Splitter is Suspendable {
         require(firstRecipient != address(0x0) && secondRecipient != address(0x0), "Please provide valid addresses");
         (uint divided, uint remainder) = msg.value.divide();
         bonus += remainder;
-        balances[firstRecipient].add(divided);
-        balances[secondRecipient].add(divided);
+        balances[firstRecipient] = balances[firstRecipient].add(divided);
+        balances[secondRecipient] = balances[secondRecipient].add(divided);
         emit LogLoad(msg.sender, msg.value, bonus);
     }
 
