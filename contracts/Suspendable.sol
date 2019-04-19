@@ -22,12 +22,12 @@ contract Suspendable is Ownable {
         isRunning = running;
     }
 
-    function suspend() public isOwner ifRunning {
+    function suspend() public onlyOwner ifRunning {
         isRunning = false;
         emit LogSuspend(msg.sender);
     }
 
-    function wakeUp() public isOwner ifSuspended {
+    function wakeUp() public onlyOwner ifSuspended {
         isRunning = true;
         emit LogWakeUp(msg.sender);
     }

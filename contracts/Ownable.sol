@@ -5,7 +5,7 @@ contract Ownable {
 
     event LogOwnerChanged(address previous, address current);
 
-    modifier isOwner() {
+    modifier onlyOwner() {
         require(msg.sender == owner);
         _;
     }
@@ -18,7 +18,7 @@ contract Ownable {
         who = owner;
     }
 
-    function changeOwnership(address newOwner) public isOwner {
+    function changeOwnership(address newOwner) public onlyOwner {
         emit LogOwnerChanged(owner, newOwner);
         owner = newOwner;
     }

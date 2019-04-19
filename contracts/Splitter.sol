@@ -26,7 +26,7 @@ contract Splitter is Suspendable {
         emit LogLoad(msg.sender, msg.value, remainder);
     }
 
-    function consultMyBalance() public view ifRunning returns (uint balance) {
+    function consultMyBalance() public view returns (uint balance) {
         balance = balances[msg.sender];
     }
 
