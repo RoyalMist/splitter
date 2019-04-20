@@ -26,8 +26,12 @@ contract Splitter is Suspendable {
         emit LogLoad(msg.sender, msg.value, remainder);
     }
 
+    function consultBalance(address who) public view returns (uint balance) {
+        balance = balances[who];
+    }
+
     function consultMyBalance() public view returns (uint balance) {
-        balance = balances[msg.sender];
+        balance = consultBalance(msg.sender);
     }
 
     // Withdraw pattern (thanks Rob for the help).
