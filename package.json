@@ -14,7 +14,8 @@
     "stylus": "^0.54.5"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npx parcel app/index.html",
+    "test": "truffle test"
   },
   "repository": {
     "type": "git",
