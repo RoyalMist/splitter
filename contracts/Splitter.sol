@@ -39,7 +39,7 @@ contract Splitter is Suspendable {
         uint available = balances[msg.sender];
         require(available > 0, "Nothing to withdraw here");
         emit LogWithdraw(msg.sender, available);
-        address(msg.sender).transfer(available);
         balances[msg.sender] = 0;
+        address(msg.sender).transfer(available);
     }
 }
