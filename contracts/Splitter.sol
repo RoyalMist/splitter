@@ -33,10 +33,6 @@ contract Splitter is Suspendable {
         balance = balances[who];
     }
 
-    function consultMyBalance() public view returns (uint balance) {
-        balance = consultBalance(msg.sender);
-    }
-
     // Withdraw pattern (thanks Rob for the help).
     function withdraw() public ifRunning {
         uint available = balances[msg.sender];
