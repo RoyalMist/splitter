@@ -1,4 +1,5 @@
 const truffleAssert = require('truffle-assertions');
+const assert = require("chai").assert;
 const splitterContract = artifacts.require("./Splitter.sol");
 
 contract("Splitter", async (accounts) => {
@@ -14,10 +15,6 @@ contract("Splitter", async (accounts) => {
         carol = accounts[2];
         currentOwner = alice;
         splitter = await splitterContract.new({from: currentOwner});
-    });
-
-    afterEach(async () => {
-        await splitter.kill({from: currentOwner});
     });
 
     /*
@@ -71,4 +68,26 @@ contract("Splitter", async (accounts) => {
     /*
      * Splitter part.
      */
+    it('should be impossible to split 0 wei', async () => {
+        await truffleAssert.fails(splitter.splitFunds(bob, carol, {from: alice, value: 0}));
+    });
+
+    it('should be impossible to split an amount to incorrect addressees', async () => {
+        const zeroAddress = "0x0000000000000000000000000000000000000000";
+        await truffleAssert.fails(splitter.splitFunds(zeroAddress, zeroAddress, {from: alice, value: 10}));
+        await truffleAssert.fails(splitter.splitFunds(bob, zeroAddress, {from: alice, value: 10}));
+        await truffleAssert.fails(splitter.splitFunds(zeroAddress, carol, {from: alice, value: 10}));
+    });
+
+    it('should split in two equal parts to the correct targets the amount', async () => {
+        let result = await splitter.splitFunds(bob, carol, {from: alice, value: 10});
+        truffleAssert.eventEmitted(result, 'LogLoad', (ev) => {
+            return ev.initiator === alice && ev.howMuch === 10 && ev.remainder === 0;
+        });
+
+        let bobBalance = await splitter.consultBalance(bob);
+        let carolBalance = await splitter.consultBalance(carol);
+        assert.equal(bobBalance, 5);
+        assert.equal(carolBalance, 5);
+    });
 });
