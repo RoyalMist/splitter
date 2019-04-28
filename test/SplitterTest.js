@@ -1,3 +1,4 @@
+const BN = require('big-number');
 const truffleAssert = require('truffle-assertions');
 const assert = require("chai").assert;
 const splitterContract = artifacts.require("./Splitter.sol");
@@ -82,12 +83,66 @@ contract("Splitter", async (accounts) => {
     it('should split in two equal parts to the correct targets the amount', async () => {
         let result = await splitter.splitFunds(bob, carol, {from: alice, value: 10});
         truffleAssert.eventEmitted(result, 'LogLoad', (ev) => {
-            return ev.initiator === alice && ev.howMuch === 10 && ev.remainder === 0;
+            return ev.initiator === alice && ev.howMuch == 10 && ev.remainder == 0;
         });
 
-        let bobBalance = await splitter.consultBalance(bob);
-        let carolBalance = await splitter.consultBalance(carol);
+        const contractBalance = await web3.eth.getBalance(splitter.address);
+        const bobBalance = await splitter.consultBalance(bob);
+        const carolBalance = await splitter.consultBalance(carol);
+        assert.equal(contractBalance, 10);
         assert.equal(bobBalance, 5);
         assert.equal(carolBalance, 5);
+    });
+
+    it('should split in two equal parts and send back the remainder to the caller', async () => {
+        let result = await splitter.splitFunds(bob, carol, {from: alice, value: 11});
+        truffleAssert.eventEmitted(result, 'LogLoad', (ev) => {
+            return ev.initiator === alice && ev.howMuch == 11 && ev.remainder == 1;
+        });
+
+        const contractBalance = await web3.eth.getBalance(splitter.address);
+        let bobBalance = await splitter.consultBalance(bob);
+        let carolBalance = await splitter.consultBalance(carol);
+        assert.equal(contractBalance, 10);
+        assert.equal(bobBalance, 5);
+        assert.equal(carolBalance, 5);
+    });
+
+    it('should prevent a withdraw if the user has an empty balance', async () => {
+        await splitter.splitFunds(bob, carol, {from: alice, value: 10});
+        await truffleAssert.fails(splitter.withdraw(alice));
+    });
+
+    it('should pass a full scenario', async () => {
+        const beforehandAliceBalance = await web3.eth.getBalance(alice);
+        const beforehandBobBalance = await web3.eth.getBalance(bob);
+        const beforehandCarolBalance = await web3.eth.getBalance(carol);
+        const gasPrice = 50;
+
+        const aliceTx = await splitter.splitFunds(bob, carol, {
+            from: alice,
+            value: 21,
+            gasPrice: gasPrice
+        });
+
+        const aliceDebit = new BN(-21 + 1 - aliceTx.receipt.gasUsed * gasPrice);
+        const expectedAliceBalance = new BN(beforehandAliceBalance).add(aliceDebit);
+        const afterhandAlicelBalance = await web3.eth.getBalance(alice);
+        assert.strictEqual(aliceTx.receipt.status, true, "Fail: Alice");
+        assert.strictEqual(afterhandAlicelBalance, expectedAliceBalance.toString(), "Incorrect balance for Alice");
+
+        const bobTx = await splitter.withdraw({from: bob, gasPrice: gasPrice});
+        const bobCredit = new BN(10 - bobTx.receipt.gasUsed * gasPrice);
+        const expectedBobBalance = new BN(beforehandBobBalance).add(bobCredit);
+        const afterhandBobBalance = await web3.eth.getBalance(bob);
+        assert.strictEqual(bobTx.receipt.status, true, "Fail: Bob");
+        assert.strictEqual(afterhandBobBalance, expectedBobBalance.toString(), "Incorrect balance for Bob");
+
+        const carolTx = await splitter.withdraw({from: carol, gasPrice: gasPrice});
+        const carolCredit = new BN(10 - carolTx.receipt.gasUsed * gasPrice);
+        const expectedCarolBalance = new BN(beforehandCarolBalance).add(carolCredit);
+        const afterhandCarolBalance = await web3.eth.getBalance(carol);
+        assert.strictEqual(carolTx.receipt.status, true, "Fail: Carol");
+        assert.strictEqual(afterhandCarolBalance, expectedCarolBalance.toString(), "Incorrect balance for Carol");
     });
 });
