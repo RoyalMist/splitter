@@ -41,4 +41,9 @@ contract Splitter is Suspendable {
         balances[msg.sender] = 0;
         address(msg.sender).transfer(available);
     }
+
+    function kill() external onlyOwner {
+        require(address(this).balance <= balances[msg.sender], "Some amount that dopes not belong to you is still to be withdrawn");
+        selfdestruct(msg.sender);
+    }
 }

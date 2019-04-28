@@ -31,8 +31,4 @@ contract Suspendable is Ownable {
         isRunning = true;
         emit LogWakeUp(msg.sender);
     }
-
-    function kill() external onlyOwner {
-        selfdestruct(msg.sender);
-    }
 }
