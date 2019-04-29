@@ -14,7 +14,7 @@ contract Ownable {
         owner = msg.sender;
     }
 
-    function getOwner() internal view returns (address who){
+    function getOwner() public view returns (address who) {
         who = owner;
     }
 

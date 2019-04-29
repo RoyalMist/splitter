@@ -19,6 +19,7 @@ contract("Splitter", async (accounts) => {
      */
     it("should allow the owner to transfer ownership", async () => {
         let ownership = await splitter.changeOwnership(carol, {from: alice});
+        assert.equal(await splitter.getOwner({from: carol}), carol, "Carol should be the owner now");
         truffleAssert.eventEmitted(ownership, 'LogOwnerChanged', (ev) => {
             return ev.previous === alice && ev.current === carol;
         });
