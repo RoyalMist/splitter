@@ -9,9 +9,9 @@ contract Splitter is Suspendable {
     // Map of address and related wealth.
     mapping(address => uint) private balances;
 
-    event LogLoad(address initiator, uint howMuch, uint remainder);
-    event LogWithdraw(address who, uint howMuch);
-    event LogWithdrawBonus(address who, uint howMuch);
+    event LogLoad(address indexed initiator, uint howMuch, uint remainder);
+    event LogWithdraw(address indexed who, uint howMuch);
+    event LogWithdrawBonus(address indexed who, uint howMuch);
 
     constructor() Suspendable(true) public {}
 
