@@ -2,22 +2,33 @@
   "name": "splitter",
   "version": "1.0.0",
   "description": "B9 Labs first project.",
-  "main": "app/index.js",
+  "main": "front/index.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
-    "big-number": "^2.0.0",
+    "app": "^0.1.0",
+    "app.vue": "^0.1.10",
+    "arc": "^0.1.1",
+    "front": "0.0.1",
+    "home": "^1.0.1",
+    "milligram": "^1.3.0",
+    "src": "^1.1.2",
+    "vue": "^2.6.10",
+    "vue-hot-reload-api": "^2.3.3",
     "web3": "^1.0.0-beta.52"
   },
   "devDependencies": {
+    "@vue/component-compiler-utils": "^3.0.0",
+    "chai": "^4.2.0",
     "parcel-bundler": "^1.12.3",
     "stylus": "^0.54.5",
-    "chai": "^4.2.0",
-    "truffle-assertions": "^0.8.2"
+    "truffle-assertions": "^0.8.2",
+    "typescript": "^3.4.5",
+    "vue-template-compiler": "^2.6.10"
   },
   "scripts": {
-    "dev": "npx parcel app/index.html",
+    "dev": "npx parcel front/index.html",
     "test": "truffle test"
   },
   "repository": {
