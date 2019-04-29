@@ -4,7 +4,7 @@
 
 <script>
     export default {
-        name: "home",
+        name: "splitter",
         data() {
             return {
                 appName: "Splitter"
