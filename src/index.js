@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Splitter from 'splitter'
+import Splitter from './splitter'
 
 new Vue({
     el: '#app',
