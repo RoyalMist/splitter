@@ -106,7 +106,15 @@ contract("Splitter", async (accounts) => {
 
     it('should prevent a withdraw if the user has an empty balance', async () => {
         await splitter.splitFunds(bob, carol, {from: alice, value: 10});
-        await truffleAssert.fails(splitter.withdraw(alice));
+        await truffleAssert.fails(splitter.withdraw({from: alice}));
+    });
+
+    it('should permit a withdraw if the user has a positive balance', async () => {
+        await splitter.splitFunds(bob, alice, {from: carol, value: 100});
+        assert.equal(await splitter.consultBalance(bob), 50, "Bob should have 50 on its balance");
+        await splitter.withdraw({from: bob});
+        assert.equal(await splitter.consultBalance(bob), 0, "Bob should have zero on its balance");
+        await truffleAssert.fails(splitter.withdraw({from: bob}));
     });
 
     it('should pass a full scenario', async () => {
