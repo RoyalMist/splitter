@@ -7,23 +7,18 @@ contract("Splitter", async (accounts) => {
     let alice;
     let bob;
     let carol;
-    let currentOwner; //Used for cleanup in afterEach.
     let splitter;
 
     beforeEach('setup contract for each test', async () => {
-        alice = accounts[0];
-        bob = accounts[1];
-        carol = accounts[2];
-        currentOwner = alice;
-        splitter = await splitterContract.new({from: currentOwner});
+        [alice, bob, carol] = accounts;
+        splitter = await splitterContract.new({from: alice});
     });
 
     /*
      * Ownable part.
      */
     it("should allow the owner to transfer ownership", async () => {
-        let ownership = await splitter.changeOwnership(carol, {from: currentOwner});
-        currentOwner = carol;
+        let ownership = await splitter.changeOwnership(carol, {from: alice});
         truffleAssert.eventEmitted(ownership, 'LogOwnerChanged', (ev) => {
             return ev.previous === alice && ev.current === carol;
         });
@@ -37,17 +32,17 @@ contract("Splitter", async (accounts) => {
      * Suspendable part.
      */
     it("should be possible to the owner to suspend the splitter", async () => {
-        let suspend = await splitter.suspend({from: currentOwner});
+        let suspend = await splitter.suspend({from: alice});
         truffleAssert.eventEmitted(suspend, 'LogSuspend', (ev) => {
-            return ev.who === currentOwner;
+            return ev.who === alice;
         });
     });
 
     it("should be possible to the owner to wake up the splitter", async () => {
-        await splitter.suspend({from: currentOwner});
-        let suspend = await splitter.wakeUp({from: currentOwner});
+        await splitter.suspend({from: alice});
+        let suspend = await splitter.wakeUp({from: alice});
         truffleAssert.eventEmitted(suspend, 'LogWakeUp', (ev) => {
-            return ev.who === currentOwner;
+            return ev.who === alice;
         });
     });
 
@@ -57,12 +52,12 @@ contract("Splitter", async (accounts) => {
     });
 
     it('should fail the splitFunds call when contract is suspended', async () => {
-        await splitter.suspend({from: currentOwner});
+        await splitter.suspend({from: alice});
         await truffleAssert.fails(splitter.splitFunds(bob, carol, {from: alice, value: 10}));
     });
 
     it('should fail the withdraw call when contract is suspended', async () => {
-        await splitter.suspend({from: currentOwner});
+        await splitter.suspend({from: alice});
         await truffleAssert.fails(splitter.withdraw({from: alice}));
     });
 
