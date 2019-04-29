@@ -1,4 +1,4 @@
-const BN = require('big-number');
+const BN = web3.utils.BN;
 const truffleAssert = require('truffle-assertions');
 const assert = require("chai").assert;
 const splitterContract = artifacts.require("./Splitter.sol");
