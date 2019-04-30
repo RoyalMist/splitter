@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import Splitter from './splitter'
+import Home from './home'
 
 new Vue({
     el: '#app',
-    render: h => h(Splitter)
+    render: h => h(Home)
 });
