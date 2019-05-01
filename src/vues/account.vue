@@ -2,6 +2,9 @@
     <div class="container">
         <div class="row">
             <div class="column">
+                <button @click="myBalance()" class="button">My Balance</button>
+            </div>
+            <div class="column">
                 <label>
                     <input placeholder="Address" type="text" v-model="address">
                 </label>
@@ -19,14 +22,26 @@
 </template>
 
 <script>
-    let balance = 0;
+    import web3 from '../web3';
 
     export default {
         name: "account",
-        data: balance,
+        props: {
+            splitter: Object
+        },
+        data() {
+            return {balance: 0, address: ""}
+        },
         methods: {
-            getBalance: (address) => {
-                alert(address);
+            getBalance: async (address) => {
+                let accounts = await web3.eth.getAccounts();
+                console.log(address, accounts);
+            },
+            myBalance: async () => {
+                let accounts = await web3.eth.getAccounts();
+                console.log(accounts);
+                //let balance = await this.splitter.consultBalance(accounts[0]);
+                //console.log(balance);
             }
         }
     }

@@ -21,6 +21,12 @@
 <script>
     export default {
         name: "split",
+        data() {
+            return {
+                firstAddress: "",
+                secondAddress: ""
+            }
+        },
         methods: {
             split: (firstAddress, secondAddress) => {
                 alert(firstAddress);

@@ -10,7 +10,7 @@
                 <split></split>
             </div>
             <div class="column">
-                <account></account>
+                <account v-bind:splitter="splitter"></account>
             </div>
         </div>
     </div>
@@ -19,10 +19,18 @@
 <script>
     import Account from "./account";
     import Split from "./split";
+    import web3 from '../web3';
 
     export default {
         name: "home",
         components: {Split, Account},
+        data() {
+            return {splitter: {}}
+        },
+        beforeMount() {
+            const abi = require('../../build/contracts/Splitter.json');
+            this.splitter = new web3.eth.Contract(JSON.parse(abi), "0x743a8BfCDf9d2Db6b9A9500393D0F10dA19F278D");
+        }
     }
 </script>
 
