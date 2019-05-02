@@ -21,6 +21,10 @@
 <script>
     export default {
         name: "split",
+        props: {
+            splitter: Object,
+            account: String
+        },
         data() {
             return {
                 firstAddress: "",
@@ -29,8 +33,9 @@
         },
         methods: {
             split: (firstAddress, secondAddress) => {
-                alert(firstAddress);
-                alert(secondAddress);
+                if (firstAddress !== "" && secondAddress !== "") {
+                    this.$props.splitter.splitFunds(firstAddress, secondAddress, {from: this.account});
+                }
             }
         }
     }

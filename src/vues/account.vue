@@ -22,26 +22,22 @@
 </template>
 
 <script>
-    import web3 from '../web3';
-
     export default {
         name: "account",
         props: {
-            splitter: Object
+            splitter: Object,
+            account: String
         },
         data() {
             return {balance: 0, address: ""}
         },
         methods: {
-            getBalance: async (address) => {
-                let accounts = await web3.eth.getAccounts();
-                console.log(address, accounts);
+            getBalance: async function (address) {
+                this.balance = await this.$props.splitter.consultBalance.call(address);
             },
-            myBalance: async () => {
-                let accounts = await web3.eth.getAccounts();
-                console.log(accounts);
-                //let balance = await this.splitter.consultBalance(accounts[0]);
-                //console.log(balance);
+            myBalance: async function () {
+                console.log(this.$props.splitter);
+                this.balance = await this.$props.splitter.consultBalance.call(this.$props.account);
             }
         }
     }

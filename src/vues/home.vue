@@ -7,10 +7,10 @@
         </div>
         <div class="row">
             <div class="column">
-                <split></split>
+                <split/>
             </div>
             <div class="column">
-                <account v-bind:splitter="splitter"></account>
+                <account v-bind:splitter="splitter" v-bind:account="account"/>
             </div>
         </div>
     </div>
@@ -19,17 +19,32 @@
 <script>
     import Account from "./account";
     import Split from "./split";
-    import web3 from '../web3';
+    import contract from 'truffle-contract';
+    import Web3 from 'web3';
 
     export default {
         name: "home",
         components: {Split, Account},
         data() {
-            return {splitter: {}}
+            return {splitter: {}, account: ""}
         },
-        beforeMount() {
-            const abi = require('../../build/contracts/Splitter.json');
-            this.splitter = new web3.eth.Contract(JSON.parse(abi), "0x743a8BfCDf9d2Db6b9A9500393D0F10dA19F278D");
+        async mounted() {
+            const splitterJson = require("../../build/contracts/Splitter.json");
+            if (typeof web3 !== 'undefined') {
+                window.web3 = new Web3(web3.currentProvider);
+            } else {
+                window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+            }
+
+            let splitterContract = contract(splitterJson);
+            splitterContract.setProvider(web3.currentProvider);
+            const accounts = await web3.eth.getAccounts();
+            if (accounts.length > 0) {
+                this.account = accounts[0];
+            }
+
+            // TODO: DataCloneError: The object could not be cloned.
+            this.splitter = await splitterContract.deployed();
         }
     }
 </script>

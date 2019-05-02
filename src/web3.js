@@ -1,18 +1,9 @@
 import Web3 from 'web3';
 
-if (window.ethereum) {
-    window.web3 = new Web3(ethereum);
-    try {
-        ethereum.enable();
-    } catch (error) {
-        console.error(error);
-    }
-} else if (window.web3) {
-    window.web3 = new Web3(web3.currentProvider);
+if (typeof web3 !== 'undefined') {
+    web3 = new Web3(web3.currentProvider);
 } else {
-    console.log(
-        'You should install MetaMask!'
-    );
+    web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 }
 
 export default web3;

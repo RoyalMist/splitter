@@ -15,9 +15,10 @@
     "milligram": "^1.3.0",
     "src": "^1.1.2",
     "tru": "^1.0.0",
+    "truffle-contract": "^4.0.14",
     "vue": "^2.6.10",
     "vue-hot-reload-api": "^2.3.3",
-    "web3": "^1.0.0-beta.37"
+    "web3": "^1.0.0-beta.54"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
