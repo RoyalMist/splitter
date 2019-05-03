@@ -3,6 +3,11 @@
         <div class="row">
             <div class="column">
                 <label>
+                    <input placeholder="Amount" type="text" v-model="amount">
+                </label>
+            </div>
+            <div class="column">
+                <label>
                     <input placeholder="First Address" type="text" v-model="firstAddress">
                 </label>
             </div>
@@ -27,14 +32,15 @@
         },
         data() {
             return {
+                amount: 0,
                 firstAddress: "",
                 secondAddress: ""
             }
         },
         methods: {
-            split: (firstAddress, secondAddress) => {
+            split: (amount, firstAddress, secondAddress) => {
                 if (firstAddress !== "" && secondAddress !== "") {
-                    this.$props.splitter.splitFunds(firstAddress, secondAddress, {from: this.account});
+                    this.$props.splitter.splitFunds(firstAddress, secondAddress, {from: this.account, value: amount});
                 }
             }
         }

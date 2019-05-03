@@ -29,6 +29,7 @@
             return {splitter: {}, account: ""}
         },
         async mounted() {
+            const mathJson = require("../../build/contracts/Math.json");
             const splitterJson = require("../../build/contracts/Splitter.json");
             if (typeof web3 !== 'undefined') {
                 window.web3 = new Web3(web3.currentProvider);
@@ -36,14 +37,16 @@
                 window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
             }
 
+            let mathContract = contract(mathJson);
             let splitterContract = contract(splitterJson);
+            mathContract.setProvider(web3.currentProvider);
             splitterContract.setProvider(web3.currentProvider);
             const accounts = await web3.eth.getAccounts();
             if (accounts.length > 0) {
                 this.account = accounts[0];
             }
 
-            // TODO: DataCloneError: The object could not be cloned.
+            await mathContract.deployed();
             this.splitter = await splitterContract.deployed();
         }
     }
