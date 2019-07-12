@@ -36,7 +36,6 @@
                 this.balance = await this.$props.splitter.consultBalance.call(address);
             },
             myBalance: async function () {
-                console.log(this.$props.splitter);
                 this.balance = await this.$props.splitter.consultBalance.call(this.$props.account);
             }
         }
