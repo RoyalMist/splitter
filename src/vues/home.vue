@@ -30,10 +30,10 @@ export default {
     return { splitter: null, account: null };
   },
   async mounted() {
-    const mathJson = require("../../build/contracts/Math.json");
-    const splitterJson = require("../../build/contracts/Splitter.json");
+    const mathJson = require("../contracts/Math.json");
+    const splitterJson = require("../contracts/Splitter.json");
     const web3 = new Web3(
-      new Web3.providers.HttpProvider("http://localhost:8545")
+      new Web3.providers.HttpProvider("http://127.0.0.1:8545")
     );
 
     let mathContract = contract(mathJson);
@@ -47,7 +47,6 @@ export default {
 
     await mathContract.deployed();
     this.splitter = await splitterContract.deployed();
-    console.log("toto");
     console.log(this.splitter);
   }
 };
