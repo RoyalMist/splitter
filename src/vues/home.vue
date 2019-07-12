@@ -32,7 +32,7 @@ export default {
   async mounted() {
     const splitterJson = require("../contracts/Splitter.json");
     const web3 = new Web3(
-      new Web3.providers.HttpProvider("http://127.0.0.1:8545")
+      new Web3.providers.HttpProvider("http://localhost:8545")
     );
 
     let splitterContract = contract(splitterJson);
@@ -42,7 +42,7 @@ export default {
       this.account = accounts[0];
     }
 
-    this.splitter = await splitterContract.deployed();
+    // this.splitter = await splitterContract.deployed();
   }
 };
 </script>

@@ -3,6 +3,7 @@
         <div class="row">
             <div class="column">
                 <button @click="myBalance()" class="button">My Balance</button>
+                <span>{{this.$props.account}}</span>
             </div>
             <div class="column">
                 <label>
@@ -26,10 +27,10 @@
         name: "account",
         props: {
             splitter: Object,
-            account: String
+            account: Array
         },
         data() {
-            return {balance: 0, address: ""}
+            return {balance: 0, address: []}
         },
         methods: {
             getBalance: async function (address) {
