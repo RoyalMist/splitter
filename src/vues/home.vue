@@ -42,7 +42,7 @@ export default {
       this.account = accounts[0];
     }
 
-    // this.splitter = await splitterContract.deployed();
+    this.splitter = await splitterContract.deployed();
   }
 };
 </script>
